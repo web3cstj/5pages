@@ -170,11 +170,13 @@
 						</div>
 					</td>
 				</tr>
-				<tr class="details modif">
+				<tr class="liste details modif">
 					<td>Liaison de paramètres à des variables
 						<div>
 							<p>Établir un lien entre les variables contenant les données et les paramètres PDO de notre SQL.</p>
 							<p><code>$stmt-&gt;<a target="_blank" href="http://php.net/manual/fr/pdostatement.bindparam.php">bindParam</a>(":champ", $champ);</code></p>
+							<p>Sous certaines conditions, cette fonction peut être accomplie directement lors du <code>execute</code>. Voir ci-dessous.</p>
+							<p>Voir aussi : <a target="_blank" href="http://php.net/manual/fr/pdostatement.bindvalue.php">bindValue</a>.</p>
 						</div>
 					</td>
 				</tr>
@@ -192,8 +194,8 @@
 				<tr class="liste details modif">
 					<td>Exécution de la requête
 						<div>
-							<p><code>$stmt-&gt;execute();</code></p>
-							<p>Mot-clé : <code><a target="_blank" href="http://php.net/manual/fr/pdostatement.execute.php">execute</a></code>, une méthode de l'objet PDOStatement.</p>
+							<p><code>$stmt-&gt;<a target="_blank" href="http://php.net/manual/fr/pdostatement.execute.php">execute</a>();</code></p>
+							<p>On peut également fournir les valeurs des paramètres et éviter le <code>bindParam</code> : Ex.: <code>$stmt-&gt;execute([':param1'=&gt;'valeur1'])</code></p>
 						</div>
 					</td>
 				</tr>
