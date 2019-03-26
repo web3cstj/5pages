@@ -3,40 +3,56 @@ class Folding {
 	static load() {
 		if (location.search) {
 			var elements = location.search.substr(1).split("&");
-			elements.forEach(function (e) {
-				var bouton = document.querySelector("#" + e);
+			elements.forEach(id => {
+				var bouton = document.getElementById(id);
 				if (bouton) {
 					bouton.checked = true;
 				}
-				document.querySelector("table.cinqpages").classList.add(e);
+				document.querySelector("table.cinqpages").classList.add(id);
 			});
 		}
+		if (localStorage.toutafficher != "false") {
+			document.getElementById("toutafficher").checked = localStorage.toutafficher;
+		}
+		this.ajouterColonnes();
 		this.initToggle();
 		this.initToggleColonne();
+		document.getElementById("toutafficher").addEventListener('change', e=>{
+			localStorage.toutafficher = e.currentTarget.checked;
+		});
+	}
+	static ajouterColonnes(tr) {
+		if (!tr) {
+			document.querySelectorAll('tbody tr').forEach(tr=>{
+				this.ajouterColonnes(tr);
+			});
+			return;
+		}
+		var tag = tr.classList.contains('entete') ? 'th' : 'td';
+		['liste','details','ajout','modif','suppr',].forEach(c=>{
+			var td = tr.appendChild(document.createElement(tag));
+			td.classList.add(c);
+		});
 	}
 	static initToggle() {
-		var elements = document.querySelectorAll("tr");
-		elements.forEach(function (e) {
-			e.addEventListener("click", this.evtToggle);
-		}, this);
+		var elements = document.querySelectorAll("tbody tr:not(.entete)");
+		elements.forEach(element => element.addEventListener("click", this.evtToggle));
 	}
 	static initToggleColonne() {
 		var elements = document.querySelectorAll("thead th[class]");
-		elements.forEach(function (e) {
-			e.addEventListener("click", this.evtToggleColonne);
-		}, this);
+		elements.forEach(element => element.addEventListener("click", this.evtToggleColonne));
 	}
-	static evtToggle() {
-		this.classList.toggle("on");
+	static evtToutAfficher(e) {
+		e.currentTarget.classList.toggle("on");
 	}
-	static evtToggleColonne() {
-		this.closest("table").classList.toggle(this.className);
+	static evtToggle(e) {
+		e.currentTarget.classList.toggle("on");
+	}
+	static evtToggleColonne(e) {
+		e.currentTarget.closest("table").classList.toggle(e.currentTarget.className);
 	}
 	static init() {
-		window.addEventListener("load", function () {
-			Folding.load();
-		});
-
+		window.addEventListener("load", () => this.load());
 	}
 }
 Folding.init();

@@ -1,8 +1,16 @@
-body {
+:root {
+	font-size: 12pt;
 	font-family: arial;
 }
 
-div.interface {}
+body {
+	margin: 0;
+}
+
+div.interface {
+	padding: 1em;
+	position: relative;
+}
 
 h1 {
 	text-align: center;
@@ -11,6 +19,15 @@ h1 {
 }
 
 table.cinqpages {
+	--fond-connexion: hsl(60, 100%, 95%);
+	--fond-connexion-entete: hsl(60, 80%, 50%);
+	--fond-traitement: hsl(120, 100%, 95%);
+	--fond-traitement-entete: hsl(120, 50%, 70%);
+	--fond-composition: hsl(180, 100%, 95%);
+	--fond-composition-entete: hsl(180, 50%, 70%);
+	--fond-affichage: hsl(240, 100%, 95%);
+	--fond-affichage-entete: hsl(240, 50%, 70%);
+
 	font-family: arial;
 	border: 2px solid black;
 	border-collapse: collapse;
@@ -40,19 +57,18 @@ table.cinqpages {
 		}
 	}
 }
-tbody,
-span {
+tbody {
 	&.connexion {
-		background-color: hsl(60, 100%, 95%);
+		background-color: var(--fond-connexion);
 	}
 	&.traitement {
-		background-color: hsl(120, 100%, 95%);
+		background-color: var(--fond-traitement);
 	}
 	&.composition {
-		background-color: hsl(180, 100%, 95%);
+		background-color: var(--fond-composition);
 	}
 	&.affichage {
-		background-color: hsl(240, 100%, 95%);
+		background-color: var(--fond-affichage);
 	}
 }
 
@@ -60,15 +76,15 @@ table {
 	counter-reset: noligne;
 }
 
-tbody > tr > td:first-child {
+tbody > tr:not(.entete) > td:first-child {
 	counter-increment: noligne;
 }
 
-#numeroter:checked ~ * tbody > tr > td:first-child:before {
+#numeroter:checked ~ * tbody > tr:not(.entete) > td:first-child:before {
 	content: counter(noligne, lower-alpha) ". ";
 }
 
-tbody > tr:hover {
+tbody > tr:not(.entete):hover {
 	background-color: rgba(0, 0, 0, .8);
 	color: white;
 }
@@ -82,6 +98,19 @@ tbody {
 
 footer {
 	height: 3em;
+}
+
+tbody.connexion tr.entete {
+	background-color: var(--fond-connexion-entete);
+}
+tbody.traitement tr.entete {
+	background-color: var(--fond-traitement-entete);
+}
+tbody.composition tr.entete {
+	background-color: var(--fond-composition-entete);
+}
+tbody.affichage tr.entete {
+	background-color: var(--fond-affichage-entete);
 }
 
 td > div {
@@ -105,12 +134,14 @@ td > div {
 	}
 
 }
-
-tr:hover,
-tr.on {
-	& > td > div {
-		display: block;
+tr:not(.entete) {
+	&:hover,
+	&.on {
+		& > td > div {
+			display: block;
+		}
 	}
+
 }
 
 tr.liste td.liste,
@@ -125,15 +156,28 @@ tr.suppr td.suppr {
 	}
 }
 
-table.liste td > div,
-table.details td > div,
-table.ajout td > div,
-table.modif td > div,
-table.suppr td > div {
-	display: block;
+table.liste,
+table.details,
+table.ajout,
+table.modif,
+table.suppr {
+	td > div {
+		display: block;
+	}
 }
 
+td a {
+	text-decoration-style: dashed;
+	text-decoration-skip-ink: none;
+	text-decoration-skip: none;
+	color: inherit;
+	text-decoration-color: rgba(0,0,0,.3);
+	&:hover {
+		text-decoration-color: rgba(0,0,0,1);
+		text-decoration-style: solid;
 
+	}
+}
 td[class] {
 	text-align: center;
 	font-size: 1.5em;
@@ -169,7 +213,7 @@ thead th {
 		cursor: pointer;
 		&::before {
 			font-family: "Segoe UI Symbol";
-			content: "\1f512";
+			content: "\1f513";
 			position: absolute;
 			top:0;
 			left:0;
@@ -180,13 +224,16 @@ thead th {
 		}
 	}
 }
-table.liste thead th.liste::before,
-table.details thead th.details::before,
-table.ajout thead th.ajout::before,
-table.modif thead th.modif::before,
-table.suppr thead th.suppr::before {
-	color:yellow;
-	opacity: 1;
+table.liste thead th.liste,
+table.details thead th.details,
+table.ajout thead th.ajout,
+table.modif thead th.modif,
+table.suppr thead th.suppr {
+	&::before {
+		color:yellow;
+		opacity: 1;
+		content: "\1f512";
+	}
 }
 @keyframes tourner {
 	0% {
@@ -207,13 +254,24 @@ input[type=checkbox] {
 
 #toutafficher:checked ~ * label[for=toutafficher],
 #numeroter:checked ~ * label[for=numeroter] {
-	box-shadow: -.1em -.1em .1em rgba(255, 255, 255, 1) inset, .1em .1em .1em rgba(0, 0, 0, .5) inset;
+//	box-shadow: -.1em -.1em .1em rgba(255, 255, 255, 1) inset, .1em .1em .1em rgba(0, 0, 0, .5) inset;
 	background: #ddd;
+	opacity: 1;
+	&::before {
+		content: "\1f512";
+	}
 }
 
 div.options {
 	position: absolute;
-	width: 10em;
+	//width: 10em;
+	top: 1em;
+	right: 1em;
+	font-size: smaller;
+	label[for=toutafficher]::before {
+		content: "\1f513";
+		font-family: "Segoe UI Symbol";
+	}
 }
 
 label {
@@ -223,35 +281,24 @@ label {
 	transition: .5s;
 	font-size: smaller;
 	font-family: arial;
-	border: 1px solid black;
+//	border: 1px solid black;
 	border-radius: .3em;
 	padding: .2em 1em;
 	background: #EEE;
 	color: black;
-	box-shadow: .1em .1em .1em rgba(255, 255, 255, 1) inset, -.1em -.1em .1em rgba(0, 0, 0, .5) inset;
-}
-
-label:hover {
-	opacity: 1;
+//	box-shadow: .1em .1em .1em rgba(255, 255, 255, 1) inset, -.1em -.1em .1em rgba(0, 0, 0, .5) inset;
+	&:hover {
+		opacity: 1;
+	}
 }
 
 footer {
 	margin-top: 1em;
-	& > div.legende {
-		border: 1px solid black;
-		padding: .25em;
-		text-align: center;
-		& > span {
-			border: 1px solid black;
-			font-size: smaller;
-			padding: 0 1em;
-		}
-	}
 }
 .afficher(@classe) {
 	table.@{classe} {
 		tbody tr {
-			&:not(.@{classe}) {
+			&:not(.@{classe}):not(.entete) {
 				display:none;
 			}
 		}
@@ -280,25 +327,28 @@ table.liste, table.details {
 
 @page {
 	size: 8.5in 11in;
-	margin: .75in;
+	margin: .5in .75in;
 }
-
 @media print {
+	tr, tbody {
+		page-break-inside: avoid;
+	}
+
 	div.instructions,
 	div.legende,
 	label {
 		display: none;
 	}
-	body {
-		margin: .5in;
-	}
+//	body {
+//		margin: .5in;
+//	}
 	div.interface {}
 	tbody {
 		background-color: transparent !important;
 	}
-	tbody.traitement {
-		background-color: rgba(0, 0, 0, .1) !important;
-	}
+//	tbody.traitement {
+//		background-color: rgba(0, 0, 0, .1) !important;
+//	}
 	table.cinqpages thead {
 	  background-color: white;
 	  color: black;
